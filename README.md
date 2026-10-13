@@ -1,87 +1,130 @@
 # Employee Performance Dashboard
 
-A FastHTML dashboard for monitoring employee performance and
-predicting recruitment risk using a machine learning model.
-
----
-
-## Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Project Structure](#project-structure)
-3. [Environment Setup](#environment-setup)
-4. [Install Dependencies](#install-dependencies)
-5. [Run the Tests](#run-the-tests)
-6. [Start the Dashboard](#start-the-dashboard)
-7. [Dashboard Features](#dashboard-features)
-8. [Python Package API](#python-package-api)
-9. [CI/CD Pipeline](#cicd-pipeline)
+A FastHTML dashboard for monitoring employee performance and predicting recruitment risk using a machine learning model.
 
 ---
 
 ## Project Overview
 
-This project consists of two main components:
+This project has two components:
 
-- **`employee_events` Python package** – provides SQL query classes
-  for accessing the `employee_events.db` SQLite database
-- **FastHTML Dashboard** – a web dashboard that visualises employee
-  performance and displays ML-based recruitment risk scores
+- **employee_events Python package** - provides SQL query classes for the SQLite database
+- **FastHTML Dashboard** - visualises performance and shows ML-based recruitment risk
 
 ---
 
 ## Project Structure
-dsnd-dashboard-project/
-├── assets/
-│   ├── model.pkl                  # Trained ML recruitment-risk model
-│   └── report.css                 # Dashboard CSS styling
-├── python-package/
-│   ├── employee_events/
-│   │   ├── init.py            # Package public API
-│   │   ├── employee.py            # Employee-specific SQL queries
-│   │   ├── employee_events.db     # SQLite database
-│   │   ├── query_base.py          # Shared SQL queries (base class)
-│   │   ├── sql_execution.py       # QueryMixin: DB connection handling
-│   │   └── team.py                # Team-specific SQL queries
-│   ├── requirements.txt
-│   └── setup.py
-├── report/
-│   ├── base_components/           # Reusable HTML base components
-│   │   ├── base_component.py
-│   │   ├── data_table.py
-│   │   ├── dropdown.py
-│   │   ├── matplotlib_viz.py
-│   │   └── radio.py
-│   ├── combined_components/       # Page layout components
-│   │   ├── combined_component.py
-│   │   └── form_group.py
-│   ├── dashboard.py               # FastHTML app and route definitions
-│   └── utils.py                   # load_model() and path variables
-├── tests/
-│   └── test_employee_events.py    # pytest test suite
-├── requirements.txt               # Project dependencies
-└── README.md
+
+    dsnd-dashboard-project/
+    ├── assets/
+    │   ├── model.pkl              (Trained ML model)
+    │   └── report.css             (Dashboard styling)
+    ├── python-package/
+    │   ├── employee_events/
+    │   │   ├── __init__.py
+    │   │   ├── employee.py        (Employee SQL queries)
+    │   │   ├── employee_events.db (SQLite database)
+    │   │   ├── query_base.py      (Shared SQL queries)
+    │   │   ├── sql_execution.py   (DB connection mixin)
+    │   │   └── team.py            (Team SQL queries)
+    │   └── setup.py
+    ├── report/
+    │   ├── base_components/
+    │   ├── combined_components/
+    │   ├── dashboard.py           (FastHTML app and routes)
+    │   └── utils.py
+    ├── tests/
+    │   └── test_employee_events.py
+    └── requirements.txt
+
+---
+
+## Prerequisites
+
+- Python 3.10 or higher
+- pip
+- Git
 
 ---
 
 ## Environment Setup
 
-### Prerequisites
+### Option A: GitHub Codespaces (recommended)
 
-- Python 3.10 or higher
-- pip (comes with Python)
-- Git
+1. Click the green **Code** button on the repository page
+2. Select **Codespaces** tab
+3. Click **Create codespace on main**
+4. A browser-based VS Code opens with a terminal
 
-### Option A: GitHub Codespaces (recommended, no local install needed)
+### Option B: Local Setup
 
-1. Go to the repository on GitHub
-2. Click the green **`<> Code`** button
-3. Select **Codespaces** → **Create codespace on main**
-4. A browser-based VS Code opens with a terminal — continue with
-   [Install Dependencies](#install-dependencies) below
+Open a terminal and run:
 
-### Option B: Clone locally
+    git clone https://github.com/Alexlab2525/dsnd-dashboard-project.git
+    cd dsnd-dashboard-project
 
-```bash
-git clone https://github.com/Alexlab2525/dsnd-dashboard-project.git
-cd dsnd-dashboard-project
+---
+
+## Install Dependencies
+
+Run these two commands in the terminal:
+
+    pip install -r requirements.txt
+
+Then install the Python package:
+
+    pip install -e python-package/
+
+---
+
+## Run the Tests
+
+    pytest tests/ -v
+
+Expected output:
+
+    tests/test_employee_events.py::test_db_exists PASSED
+    tests/test_employee_events.py::test_employee_table_exists PASSED
+    tests/test_employee_events.py::test_team_table_exists PASSED
+    tests/test_employee_events.py::test_employee_events_table_exists PASSED
+    4 passed in 0.02s
+
+---
+
+## Start the Dashboard
+
+    cd report
+    python dashboard.py
+
+Open your browser at the URL shown in the terminal (e.g. http://localhost:5001 for local setup, or the Codespaces forwarded URL when using GitHub Codespaces).
+
+Codespaces users: click **Open in Browser** when the popup appears.
+
+---
+
+## Dashboard Features
+
+**Employee View** - select an employee to see:
+- Predicted recruitment risk score (Low / Medium / High)
+- Line chart of positive and negative events over time
+- Data table with per-date event counts
+
+**Team View** - select a team to see:
+- Average recruitment risk across all team members
+- Aggregated line chart of team performance events
+- Data table with per-date event counts
+
+---
+
+## CI/CD Pipeline
+
+GitHub Actions automatically runs all tests on every push to main.
+
+Workflow file: .github/workflows/tests.yml
+
+Steps:
+1. Checkout repository
+2. Setup Python 3.10 and 3.11
+3. Install dependencies
+4. Install employee_events package
+5. Run pytest
